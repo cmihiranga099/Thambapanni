@@ -151,7 +151,14 @@ class PackageController extends Controller
      */
     public function show(Package $package): View
     {
-        return view('packages.show', compact('package'));
+        $relatedPackages = Package::active()
+            ->where('id', '!=', $package->id)
+            ->where('location', $package->location)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('packages.show', compact('package', 'relatedPackages'));
     }
 
     /**

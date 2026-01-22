@@ -71,12 +71,11 @@
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
                         @if($package->image)
                             <div class="h-48 bg-cover bg-center relative overflow-hidden" style="background-image: url('{{ asset('storage/' . $package->image) }}')">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                                <div class="absolute bottom-4 left-4 right-4">
+                                <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                                     <span class="text-white text-xl font-bold drop-shadow-lg">{{ $package->location }}</span>
                                 </div>
                                 @if($package->is_active)
-                                    <span class="absolute top-4 right-4 bg-green-500 text-white text-xs px-2 py-1 rounded-full">Active</span>
+                                    <span class="absolute top-4 right-4 bg-green-500 text-white text-xs px-2 py-1 rounded-full z-10">Active</span>
                                 @endif
                             </div>
                         @else

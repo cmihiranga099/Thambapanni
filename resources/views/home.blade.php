@@ -127,11 +127,10 @@
                 <div class="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-gray-100">
                     @if($package->image)
                         <div class="h-48 sm:h-56 bg-cover bg-center relative overflow-hidden" style="background-image: url('{{ asset('storage/' . $package->image) }}')">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                            <div class="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4">
+                            <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                                 <span class="text-white text-lg sm:text-xl font-bold drop-shadow-lg">{{ $package->location }}</span>
                             </div>
-                            <div class="absolute top-3 sm:top-4 right-3 sm:right-4">
+                            <div class="absolute top-3 sm:top-4 right-3 sm:right-4 z-10">
                                 <span class="bg-white/90 text-gray-800 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold">{{ $package->duration }}</span>
                             </div>
                         </div>
