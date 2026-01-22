@@ -29,6 +29,10 @@ $packages = Package::all();
 $downloaded = 0;
 
 foreach ($packages as $package) {
+    if (!empty($package->gallery_images)) {
+        continue;
+    }
+
     $keywords = buildKeywords($package->location, $package->name);
     $slug = Str::slug($package->name . '-' . $package->id);
     $galleryImages = [];
