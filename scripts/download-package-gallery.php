@@ -15,18 +15,9 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = require __DIR__ . '/../bootstrap/app.php';
 $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
-$storageDir = storage_path('app/public/packages/gallery');
-$publicDir = public_path('storage/packages/gallery');
-
-clearDirectory($storageDir);
-clearDirectory($publicDir);
-Package::query()->update(['gallery_images' => null]);
-
-if (!is_dir($storageDir)) {
-    mkdir($storageDir, 0755, true);
-}
-if (!is_dir($publicDir)) {
-    mkdir($publicDir, 0755, true);
+$shouldReset = in_array('--reset', $argv, true);
+if ($shouldReset) {
+    Package::query()->update(['gallery_images' => null]);
 }
 
 $packages = Package::all();
@@ -34,43 +25,10 @@ $downloaded = 0;
 
 foreach ($packages as $package) {
     $keywords = buildKeywords($package->location, $package->name);
-    $slug = Str::slug($package->name . '-' . $package->id);
     $galleryImages = [];
-    $hashes = [];
-    $attempts = 0;
 
     for ($i = 1; $i <= 3; $i++) {
-        $saved = false;
-        $localIndex = 0;
-
-        while (!$saved && $attempts < 30) {
-            $attempts++;
-            $localIndex++;
-        $filename = $slug . '-' . $i . '.jpg';
-        $relativePath = 'packages/gallery/' . $filename;
-        $storagePath = $storageDir . DIRECTORY_SEPARATOR . $filename;
-        $publicPath = $publicDir . DIRECTORY_SEPARATOR . $filename;
-
-            $url = buildImageUrl($keywords, $package->id, $i + $localIndex);
-        $imageData = downloadImage($url);
-
-        if ($imageData === null) {
-                continue;
-        }
-
-            $hash = hash('sha256', $imageData);
-            if (isset($hashes[$hash])) {
-                continue;
-            }
-
-        file_put_contents($storagePath, $imageData);
-        copy($storagePath, $publicPath);
-
-        $galleryImages[] = $relativePath;
-            $hashes[$hash] = true;
-        $downloaded++;
-            $saved = true;
-        }
+        $galleryImages[] = buildImageUrl($keywords, $package->id, $i);
     }
 
     if (!empty($galleryImages)) {
@@ -78,7 +36,7 @@ foreach ($packages as $package) {
     }
 }
 
-echo "Gallery download complete. Images saved: {$downloaded}\n";
+echo "Gallery URLs saved for packages.\n";
 
 function buildKeywords(string $location, string $name): array
 {
@@ -122,41 +80,5 @@ function buildImageUrl(array $keywords, int $packageId, int $index): string
     $tags = implode(',', array_slice($keywords, 0, 6));
     $lock = ($packageId * 10) + $index;
 
-    return "https://loremflickr.com/1200/800/{$tags}?lock={$lock}";
-}
-
-function downloadImage(string $url): ?string
-{
-    $context = stream_context_create([
-        'http' => [
-            'timeout' => 30,
-            'user_agent' => 'ThambapanniTravel/1.0'
-        ]
-    ]);
-
-    $data = @file_get_contents($url, false, $context);
-
-    if ($data === false) {
-        return null;
-    }
-
-    return $data;
-}
-
-function clearDirectory(string $path): void
-{
-    if (!is_dir($path)) {
-        return;
-    }
-
-    $items = array_diff(scandir($path), ['.', '..']);
-    foreach ($items as $item) {
-        $itemPath = $path . DIRECTORY_SEPARATOR . $item;
-        if (is_dir($itemPath)) {
-            clearDirectory($itemPath);
-            rmdir($itemPath);
-        } else {
-            unlink($itemPath);
-        }
-    }
+    return "https://loremflickr.com/800/600/{$tags}?lock={$lock}";
 }
