@@ -29,6 +29,17 @@
                             <span class="text-white font-bold text-2xl sm:text-3xl">{{ $package->location }}</span>
                         </div>
                     @endif
+
+                    @if(!empty($package->gallery_images))
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-900 mb-3">More Photos</h3>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                @foreach($package->gallery_images as $galleryImage)
+                                    <div class="h-24 sm:h-28 bg-cover bg-center rounded-md shadow-sm" style="background-image: url('{{ asset('storage/' . $galleryImage) }}')"></div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Package Details -->
@@ -132,4 +143,3 @@
         </div>
     </div>
 </x-app-layout>
-

@@ -17,6 +17,7 @@ class Package extends Model
         'price',
         'location',
         'image',
+        'gallery_images',
         'highlights',
         'itinerary',
         'inclusions',
@@ -36,7 +37,8 @@ class Package extends Model
         'highlights' => 'array',
         'itinerary' => 'array',
         'inclusions' => 'array',
-        'exclusions' => 'array'
+        'exclusions' => 'array',
+        'gallery_images' => 'array'
     ];
 
     public function bookings(): HasMany

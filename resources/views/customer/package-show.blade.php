@@ -60,6 +60,17 @@
                                 </div>
                             </div>
                         @endif
+
+                        @if(!empty($package->gallery_images))
+                            <div class="p-6 border-t border-gray-100">
+                                <h3 class="text-base font-semibold text-gray-900 mb-3">More Photos</h3>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                    @foreach($package->gallery_images as $galleryImage)
+                                        <div class="h-24 sm:h-28 bg-cover bg-center rounded-md shadow-sm" style="background-image: url('{{ asset('storage/' . $galleryImage) }}')"></div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                         
                         <div class="p-6">
                             <div class="flex items-center justify-between mb-4">
